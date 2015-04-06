@@ -60,11 +60,13 @@ public class Biblioteca {
 				cd_user = cd_max_user;
 			
 			identificador = cd_user++;
+			user.setIdentificador(identificador);
 		}
+		
 		
 		user_old = list_usuarios.put(Long.toString(identificador), user); 
 		
-		if(user_old != null){ // if this is not null, its cuz had a previous values associated with this key
+		if(user_old != null){ // if this is not null, it's because had a previous values associated with this key
 			salvarLogErro("Error 001 - Usuário com chave já existente. Usuário Antigo: "+user_old.toString()+"|| Usuário que foi inserito: "+user.toString());//save in log
 			list_usuarios.put(Long.toString(identificador), user_old); // 'rollback'
 			return false;
@@ -90,6 +92,13 @@ public class Biblioteca {
 			salvarLogAviso("Aviso 001: O produto "+product.toString()+" possuia a mesma identificação que "+product_old.toString()+" ,logo foi adicionado somente a quantidade.");
 			product_old.addQuantidade(product.getQuantidade());			
 		}
+		
+		return true;
+	}
+	
+	public boolean removeProduto(Produto product, long quantidade){
+		if(!product.removeQuantidade(quantidade))
+			return false;
 		
 		return true;
 	}

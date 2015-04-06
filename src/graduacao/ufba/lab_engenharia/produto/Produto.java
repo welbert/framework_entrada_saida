@@ -30,6 +30,15 @@ public abstract class Produto {
 	public void addQuantidade(long quantidade) {
 		this.quantidade += quantidade;
 	}
+	
+	public boolean removeQuantidade(long quantidade){
+		long qtdAux = this.quantidade - quantidade;
+		if(qtdAux < 0)
+			return false;
+		
+		this.quantidade = qtdAux;
+		return true;
+	}
 
 	public String getIdentificador() {
 		return identificador;
