@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * 	Arquivo(String nome); Nome se refere ao nome do arquivo
  * 
  * Comandos:
- * 	salva(String texto);Ele salvara no arquivo a string e pulará a linha no arquivo
+ * 	salvar(String texto);Ele salvara no arquivo a string e pulará a linha no arquivo
  *  
  *  reset(); Ele reiniciará o carregar(), apontando para o inicio do arquivo
  *  

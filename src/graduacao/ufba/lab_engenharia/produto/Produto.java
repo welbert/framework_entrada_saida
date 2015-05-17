@@ -1,22 +1,39 @@
 package graduacao.ufba.lab_engenharia.produto;
 
+
 public abstract class Produto {
 	
 	private long quantidade;
-	private String identificador = null;
+	private long id;
 	private String nome;
+	protected String identificador;
 	
 	public abstract String toString(); //show product's information
 	
-	public Produto(String identificador,String nome,long quantidade){
+	public abstract String toStringNotaFiscal(); //show product's information
+	
+	public abstract Produto getCopiaProduto();
+	//Exemplo de copia:
+	//Produto copia = new Produto(this.getnome,this.....);
+	//
+	
+	public Produto(long id,String nome,long quantidade){
 		this.quantidade = quantidade;
-		this.identificador = identificador;
+		this.id = id;
 		this.nome = nome;
 	}
 	
 	public Produto(String nome,long quantidade){
 		this.quantidade = quantidade;
 		this.nome = nome;
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public long getQuantidade() {
@@ -40,9 +57,7 @@ public abstract class Produto {
 		return true;
 	}
 
-	public String getIdentificador() {
-		return identificador;
-	}
+	public abstract String getIdentificador();
 
 	public void setIdentificador(String identificador) {
 		this.identificador = identificador;
