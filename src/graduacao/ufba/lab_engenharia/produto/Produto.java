@@ -4,7 +4,7 @@ package graduacao.ufba.lab_engenharia.produto;
 public abstract class Produto {
 	
 	private long quantidade;
-	private long id;
+	private long id;//TODO:Ive: O tipo long não é compativel com uma busca padrão que recebe Object[]. Long é um tipo primitivo que n deriva de Object
 	private String nome;
 	protected String identificador;
 	

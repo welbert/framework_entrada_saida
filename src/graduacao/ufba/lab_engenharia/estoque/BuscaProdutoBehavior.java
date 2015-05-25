@@ -1,8 +1,10 @@
 package graduacao.ufba.lab_engenharia.estoque;
 
+import java.util.ArrayList;
+
 import graduacao.ufba.lab_engenharia.produto.Produto;
 
 public interface BuscaProdutoBehavior {
-
-	public Produto[] buscarProduto(Object[] Args);
+//Ive
+	public ArrayList<Produto> buscarProduto(Object[] Args);
 }
