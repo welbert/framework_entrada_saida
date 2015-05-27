@@ -30,7 +30,7 @@ public class GerenteTransacao {
 
 		Set<String> chaves = list_transacao.keySet();  
 		for (String chave : chaves)  
-		{  
+		{ 
 			if(chave == user.getIdentificador())
 				return false;
 			else{
