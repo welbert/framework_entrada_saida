@@ -10,11 +10,13 @@ import graduacao.ufba.lab_engenharia.utility.Arquivo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Estoque {
 
 	private static Estoque instance;
 	private long cd_user = 1;
+	private int indexCurrentNotificacao = 0;//Ive: TODO: adicionar ao diagrama de classes
 	private HashMap<String, Usuario> list_usuarios;
 	private HashMap<String,Produto> list_produtos;
 	private ArrayList<Notificacao> list_notificacao;
@@ -109,11 +111,29 @@ public class Estoque {
 		
 		return true;
 	}
-	
-	public boolean editProduct(Produto old_product,Produto new_product){
-		//TODO fazer a remocao do antigo e adicionar o novo
-		return true;
+	//implementado por Ive
+	//TODO: Incluir no Diagrama de Classes
+	public HashMap<String,Produto> getListProdutos(){
+		return list_produtos;
 	}
+	
+	//implementado por Ive
+	//TODO: Incluir no Diagrama de Classes
+	public String returnKeyObject(Produto product){
+		for(Entry<String, Produto> entry : list_produtos.entrySet()) {
+		    Produto produto = entry.getValue();
+		    if(produto.equals(product)){
+		    	return entry.getKey();
+		    }
+		}
+		return null;
+	}
+	
+	//implementado por Ive
+	public boolean editProduct(Produto old_product,Produto new_product){
+		return	 list_produtos.replace(returnKeyObject(old_product), old_product, new_product);
+	}
+	
 	
 	public boolean removeProduto(Produto product, long quantidade){
 		if(!product.removeQuantidade(quantidade))
@@ -122,34 +142,51 @@ public class Estoque {
 		return true;
 	}
 	
+	//implementado por Ive
 	public boolean alterarQuantidadeProduto(Produto product,int quantidade){
-		//TODO Fazer a alteração da quantidade do produto
+		Produto produto_novo = product;
+		produto_novo.setQuantidade(quantidade);
+		editProduct(product,produto_novo);
 		return true;
 	}
 	
-	private synchronized ArrayList<Notificacao> getList_notificao(){
+	private synchronized ArrayList<Notificacao> getList_notificacao(){
 		return list_notificacao;
 	}
 	
 	public  boolean addNotificacao(Notificacao notificacao){
-		return getList_notificao().add(notificacao);
+		return getList_notificacao().add(notificacao);
 	}
 	
+	//implementado por Ive
 	public boolean editNotificacao(Notificacao old_notificacao,Notificacao new_notificacao){
-		//TODO fazer a remocao do antigo e adicionar o novo
-		return true;
+		int index = getList_notificacao().indexOf(old_notificacao);
+		getList_notificacao().add(index, new_notificacao);
+		if(index > -1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	public boolean removeNotificacao(Notificacao notificacao){
+		return getList_notificacao().remove(notificacao);
 	}
 	
-	public boolean removeNotificacao(Notificacao notificacao){
-		return getList_notificao().remove(notificacao);
+	//implementado por Ive
+	//TODO: Incluir no Diagrama de Classes
+	public int getIndexNotificacao(Notificacao notificacao){
+		return getList_notificacao().indexOf(notificacao);
 	}
 	
 	public Notificacao getNextNotificacao(){
-		//TODO fazer a logica para pegar a proxima notificacao na lista, criar uma variavel pra armazenar o index da ultima notificao usada
-		return null;
+		indexCurrentNotificacao++;//Incrementa o valor do indice da notificação atual
+		return getList_notificacao().get(indexCurrentNotificacao);
 	}
 	
-	public Produto[] buscaProduto(Object[] Args){
+	//Ive: TODO: Mudar no Diagrama de Classe
+	public ArrayList<Produto> buscaProduto(Object[] Args){
 		return algoritmo_busca_produto.buscarProduto(Args);
 	}
 	
