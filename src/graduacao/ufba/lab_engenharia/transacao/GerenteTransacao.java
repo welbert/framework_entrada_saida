@@ -42,7 +42,8 @@ public class GerenteTransacao {
 		return true;
 	}
 
-	public boolean fecharTransacao(Usuario user,Object[] Args){
+	public boolean fecharTransacao(Object[] Args){
+		Usuario user = (Usuario) Args[0];
 		if(regra_fechamento.isValidRegra(Args)){
 			addHistorico(user);
 			list_transacao.remove(user.getIdentificador());

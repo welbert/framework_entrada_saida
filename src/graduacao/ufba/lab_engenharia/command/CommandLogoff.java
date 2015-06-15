@@ -1,5 +1,7 @@
 package graduacao.ufba.lab_engenharia.command;
 
+import graduacao.ufba.lab_engenharia.config.TabelaNiveisUsuario;
+
 public class CommandLogoff extends Command{
 
 	@Override
@@ -10,8 +12,7 @@ public class CommandLogoff extends Command{
 
 	@Override
 	public int getNivelCommand() {
-		// TODO Auto-generated method stub
-		return 0;
+		return TabelaNiveisUsuario.LIVRE;
 	}
 
 }

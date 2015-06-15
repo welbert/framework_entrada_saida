@@ -1,17 +1,20 @@
 package graduacao.ufba.lab_engenharia.command;
 
+import graduacao.ufba.lab_engenharia.config.TabelaNiveisUsuario;
+import graduacao.ufba.lab_engenharia.estoque.Estoque;
+
 public class CommandFinalizarTransacao extends Command{
 
 	@Override
 	public Object[] execute(Object[] dados) {
-		// TODO Auto-generated method stub
-		return null;
+			Object[] result = new Object[1]; 		
+			result[1] = Estoque.getInstance().fecharTransacao(dados);
+		return result;
 	}
 
 	@Override
 	public int getNivelCommand() {
-		// TODO Auto-generated method stub
-		return 0;
+		return TabelaNiveisUsuario.USUARIO;
 	}
 
 }

@@ -216,8 +216,8 @@ public class Estoque implements Runnable{
 		return gerente_transacao.iniciarTransacao(user);
 	}
 	
-	public boolean fecharTransacao(Usuario user, Object[] Args){
-		return gerente_transacao.fecharTransacao(user, Args);
+	public boolean fecharTransacao(Object[] Args){
+		return gerente_transacao.fecharTransacao(Args);
 	}
 	
 	public boolean cancelarTransacao(Usuario user){

@@ -8,8 +8,8 @@ public class CommandAddUser extends Command{
 
 	@Override
 	public Object[] execute(Object[] dados) {
-			Object[] result = new Object[1]; 
-			result[1] = Estoque.getInstance().addUsuario((Usuario) dados[1]);
+			Object[] result = new Object[0]; 
+			result[0] = Estoque.getInstance().addUsuario((Usuario) dados[0]);
 		return result;
 	}
 
