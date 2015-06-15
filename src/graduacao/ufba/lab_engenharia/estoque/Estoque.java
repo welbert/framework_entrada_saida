@@ -12,11 +12,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class Estoque {
+public class Estoque implements Runnable{
 
 	private static Estoque instance;
 	private long cd_user = 1;
-	private int indexCurrentNotificacao = 0;//Ive: TODO: adicionar ao diagrama de classes
 	private HashMap<String, Usuario> list_usuarios;
 	private HashMap<String,Produto> list_produtos;
 	private ArrayList<Notificacao> list_notificacao;
@@ -154,8 +153,14 @@ public class Estoque {
 		return list_notificacao;
 	}
 	
-	public  boolean addNotificacao(Notificacao notificacao){
-		return getList_notificacao().add(notificacao);
+	public  void addNotificacao(Notificacao notificacao){
+		int tempo = notificacao.getTempo();
+		for(Notificacao notifi: getList_notificacao() ){
+			if(tempo < notifi.getTempo()){
+				getList_notificacao().add(getList_notificacao().indexOf(notifi), notificacao);
+				break;
+			}
+		}
 	}
 	
 	//implementado por Ive
@@ -180,9 +185,16 @@ public class Estoque {
 		return getList_notificacao().indexOf(notificacao);
 	}
 	
+	//Obter a notificação mais atual, atualizar seu tempo e reordena-la na fila
 	public Notificacao getNextNotificacao(){
-		indexCurrentNotificacao++;//Incrementa o valor do indice da notificação atual
-		return getList_notificacao().get(indexCurrentNotificacao);
+		Notificacao notifi = getList_notificacao().get(0);
+		notifi.setTempo();//Atualiza tempo
+		//Realoca a primeira da fila
+		getList_notificacao().remove(0);
+		addNotificacao(notifi);
+		//Notificar:
+		notifi.notificar();
+		return notifi;
 	}
 	
 	//Ive: TODO: Mudar no Diagrama de Classe
@@ -218,5 +230,17 @@ public class Estoque {
 	
 	public String emitirHistorcio(Usuario user){
 		return gerente_transacao.emitirHistorio(user);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		getNextNotificacao();
+		try {
+			Thread.sleep(getList_notificacao().get(0).getTempo()*1000);//Colocar a thread para dormir em milisegundos
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

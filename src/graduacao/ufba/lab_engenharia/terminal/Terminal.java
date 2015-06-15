@@ -5,15 +5,17 @@ package graduacao.ufba.lab_engenharia.terminal;
 import graduacao.ufba.lab_engenharia.command.CommandAddUser;
 import graduacao.ufba.lab_engenharia.command.Command;
 import graduacao.ufba.lab_engenharia.config.Config;
+import graduacao.ufba.lab_engenharia.estoque.Estoque;
 import graduacao.ufba.lab_engenharia.usuario.Usuario;
 
 import java.util.HashMap;
 
 
 
-public class Terminal {
+public class Terminal  {
 
 	private static Terminal instance;
+	private static Thread ThreadNotificacao;
 	private static HashMap<String,Command> commands;
 	private Usuario usuario_autenticado = null;
 	
@@ -50,9 +52,11 @@ public class Terminal {
 		return true;
 	}
 	
+	//Implementacao da thread que varrerá constantemente a lista de noticacao em estoque, respeitando seu tempo
 	private void initializeThreadNotificacao(){ 
 		if(Config.parametro_notificacao_ativa){
-			//TODO implementacao da thread que varrerá constantemente a lista de noticacao em estoque, respeitando seu tempo
+			ThreadNotificacao = new Thread(Estoque.getInstance());
+			ThreadNotificacao.start();
 		}
 	}
 	
@@ -81,6 +85,8 @@ public class Terminal {
 	public static void main(String[] args) {
 		loadCommands();
 	}
+
+	
 	
 	
 	

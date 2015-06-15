@@ -5,9 +5,10 @@ import graduacao.ufba.lab_engenharia.estoque.Estoque;
 
 import java.util.Date;
 
-public class Notificacao {
+public class Notificacao implements NotificaBehavior{
 	private String text;
 	private int quantidade;
+	private int offset;
 	private int tempo;
 	private String tipo;
 	private NotificaBehavior notifica;
@@ -15,10 +16,12 @@ public class Notificacao {
 	
 	
 	
-	public Notificacao(String text, int quantidade, int tempo, String tipo) {
+	@SuppressWarnings("deprecation")
+	public Notificacao(String text, int quantidade, int offset, String tipo) {
 		this.text = text;
 		this.quantidade = quantidade;
-		this.tempo = tempo;
+		this.offset = offset;//TODO: Atualizar diagrama de classes
+		this.tempo = getDateNow().getSeconds()+(offset*1000);	//TODO: Checar formato da data
 		this.tipo = tipo;
 		try {
 			this.notifica = (NotificaBehavior) Class.forName(Config.parametro_notificabehavior_class).newInstance();
@@ -27,11 +30,23 @@ public class Notificacao {
 		}
 	}
 	
+	
 	public void notificar(){
 		if(notifica!=null){
 			notifica.notificar(this);
 			ultima_notificacao = Estoque.getDataAtual();
 		}
+	}
+	
+	//TODO: Atualizar diagrama de classe
+	public void notificar(Notificacao notifica){
+	//Implementado pelo usuário
+	}
+	
+	//TODO: Atualizar diagrama de classe
+	public static Date getDateNow(){
+		Date date = new Date();
+		return date;
 	}
 	
 	public String getText() {
@@ -47,10 +62,16 @@ public class Notificacao {
 		this.quantidade = quantidade;
 	}
 	public int getTempo() {
-		return tempo;
+		return tempo ;
 	}
-	public void setTempo(int tempo) {
-		this.tempo = tempo;
+	public int getOffset() {
+		return offset;
+	}
+	//TODO: Atualizar diagrama de classe
+	//TODO: Checar formato da data
+	@SuppressWarnings("deprecation")
+	public void setTempo() {
+		this.tempo = getDateNow().getSeconds()+(offset*1000);;
 	}
 	public String getTipo() {
 		return tipo;
