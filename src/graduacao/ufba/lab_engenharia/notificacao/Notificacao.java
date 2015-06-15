@@ -3,13 +3,14 @@ package graduacao.ufba.lab_engenharia.notificacao;
 import graduacao.ufba.lab_engenharia.config.Config;
 import graduacao.ufba.lab_engenharia.estoque.Estoque;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Notificacao implements NotificaBehavior{
 	private String text;
 	private int quantidade;
-	private int offset;
-	private int tempo;
+	private Date tempo;//TODO: Atualizar diagrama de classes
+	private int offset;//TODO: Atualizar diagrama de classes
 	private String tipo;
 	private NotificaBehavior notifica;
 	private Date ultima_notificacao;
@@ -17,11 +18,11 @@ public class Notificacao implements NotificaBehavior{
 	
 	
 	@SuppressWarnings("deprecation")
-	public Notificacao(String text, int quantidade, int offset, String tipo) {
+	public Notificacao(String text, int quantidade,Date tempo, int offset, String tipo) {
 		this.text = text;
 		this.quantidade = quantidade;
-		this.offset = offset;//TODO: Atualizar diagrama de classes
-		this.tempo = getDateNow().getSeconds()+(offset*1000);	//TODO: Checar formato da data
+		this.offset = offset;
+		this.tempo = tempo;
 		this.tipo = tipo;
 		try {
 			this.notifica = (NotificaBehavior) Class.forName(Config.parametro_notificabehavior_class).newInstance();
@@ -31,22 +32,28 @@ public class Notificacao implements NotificaBehavior{
 	}
 	
 	
-	public void notificar(){
+	public void notificar(){//Isso é um default?TODO: N vejo real necessidade
 		if(notifica!=null){
 			notifica.notificar(this);
 			ultima_notificacao = Estoque.getDataAtual();
 		}
 	}
 	
-	//TODO: Atualizar diagrama de classe
+	//TODO: Atualizar diagrama de classe://PONTO FLEXIVEL
 	public void notificar(Notificacao notifica){
 	//Implementado pelo usuário
 	}
 	
-	//TODO: Atualizar diagrama de classe
-	public static Date getDateNow(){
-		Date date = new Date();
-		return date;
+	
+	//TODO: Atualizar diagrama de classe//PONTO FLEXIVEL
+	public void atualizaTempo(){
+		//Calcula tempo atual + offset, que pode ser por mes, data, hora, etc...
+		//Cabe ao usuario determinar offset
+		//Exemplo:
+		/*
+		 * tempo.setHours(getOffset());
+		 */
+		
 	}
 	
 	public String getText() {
@@ -61,17 +68,15 @@ public class Notificacao implements NotificaBehavior{
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
-	public int getTempo() {
+	public Date getTempo() {
 		return tempo ;
 	}
 	public int getOffset() {
 		return offset;
 	}
 	//TODO: Atualizar diagrama de classe
-	//TODO: Checar formato da data
-	@SuppressWarnings("deprecation")
-	public void setTempo() {
-		this.tempo = getDateNow().getSeconds()+(offset*1000);;
+	public void setTempo(Date tempo) {
+		this.tempo = tempo;
 	}
 	public String getTipo() {
 		return tipo;

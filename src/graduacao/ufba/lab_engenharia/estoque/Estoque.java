@@ -154,9 +154,9 @@ public class Estoque implements Runnable{
 	}
 	
 	public  void addNotificacao(Notificacao notificacao){
-		int tempo = notificacao.getTempo();
+		Date tempo = notificacao.getTempo();
 		for(Notificacao notifi: getList_notificacao() ){
-			if(tempo < notifi.getTempo()){
+			if(tempo.before(notifi.getTempo())){
 				getList_notificacao().add(getList_notificacao().indexOf(notifi), notificacao);
 				break;
 			}
@@ -188,7 +188,7 @@ public class Estoque implements Runnable{
 	//Obter a notificação mais atual, atualizar seu tempo e reordena-la na fila
 	public Notificacao getNextNotificacao(){
 		Notificacao notifi = getList_notificacao().get(0);
-		notifi.setTempo();//Atualiza tempo
+		notifi.atualizaTempo();//Atualiza tempo
 		//Realoca a primeira da fila
 		getList_notificacao().remove(0);
 		addNotificacao(notifi);
@@ -233,14 +233,18 @@ public class Estoque implements Runnable{
 	}
 
 	@Override
+	// TODO Atualizar Diagrama de classes(?)
 	public void run() {
-		// TODO Auto-generated method stub
-		getNextNotificacao();
-		try {
-			Thread.sleep(getList_notificacao().get(0).getTempo()*1000);//Colocar a thread para dormir em milisegundos
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		long wait;
+		while(Config.parametro_notificacao_ativa){
+			getNextNotificacao();
+			try {
+				wait = getList_notificacao().get(0).getTempo().getTime() - new Date().getTime();//tempo de espera do primeiro da lista
+				Thread.sleep(wait);//Colocar a thread para dormir em milisegundos
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
