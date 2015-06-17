@@ -3,10 +3,9 @@ package graduacao.ufba.lab_engenharia.notificacao;
 import graduacao.ufba.lab_engenharia.config.Config;
 import graduacao.ufba.lab_engenharia.estoque.Estoque;
 
-import java.util.Calendar;
 import java.util.Date;
 
-public class Notificacao implements NotificaBehavior{
+public class Notificacao{
 	private String text;
 	private int quantidade;
 	private Date tempo;//TODO: Atualizar diagrama de classes
@@ -17,7 +16,6 @@ public class Notificacao implements NotificaBehavior{
 	
 	
 	
-	@SuppressWarnings("deprecation")
 	public Notificacao(String text, int quantidade,Date tempo, int offset, String tipo) {
 		this.text = text;
 		this.quantidade = quantidade;
@@ -32,28 +30,18 @@ public class Notificacao implements NotificaBehavior{
 	}
 	
 	
-	public void notificar(){//Isso é um default?TODO: N vejo real necessidade
+	public void notificar(){//
 		if(notifica!=null){
 			notifica.notificar(this);
 			ultima_notificacao = Estoque.getDataAtual();
 		}
 	}
 	
-	//TODO: Atualizar diagrama de classe://PONTO FLEXIVEL
-	public void notificar(Notificacao notifica){
-	//Implementado pelo usuário
-	}
-	
-	
-	//TODO: Atualizar diagrama de classe//PONTO FLEXIVEL
+	//TODO: Atualizar diagrama de classe//
 	public void atualizaTempo(){
-		//Calcula tempo atual + offset, que pode ser por mes, data, hora, etc...
-		//Cabe ao usuario determinar offset
-		//Exemplo:
-		/*
-		 * tempo.setHours(getOffset());
-		 */
-		
+		if(notifica!=null){
+			notifica.atualizaTempo(this);
+		}
 	}
 	
 	public String getText() {
