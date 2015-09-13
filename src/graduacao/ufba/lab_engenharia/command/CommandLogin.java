@@ -8,6 +8,7 @@ public class CommandLogin extends Command{
 
 	@Override
 	public Object[] execute(Object[] dados) {
+		// TODO Implementar a lógica de login para a aplicação que irá usar o framework
 		return null;
 	}
 

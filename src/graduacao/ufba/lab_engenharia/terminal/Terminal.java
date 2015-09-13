@@ -55,7 +55,7 @@ public class Terminal  {
 	//Implementacao da thread que varrerá constantemente a lista de noticacao em estoque, respeitando seu tempo
 	private static void initializeThreadNotificacao(){ 
 		if(Config.parametro_notificacao_ativa){
-			ThreadNotificacao = new Thread(Estoque.getInstance());
+			ThreadNotificacao = new Thread(Estoque.getInstance().getThreadNotificacao());
 			ThreadNotificacao.start();
 		}
 	}

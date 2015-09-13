@@ -2,6 +2,7 @@ package graduacao.ufba.lab_engenharia.estoque;
 
 import graduacao.ufba.lab_engenharia.config.Config;
 import graduacao.ufba.lab_engenharia.notificacao.Notificacao;
+import graduacao.ufba.lab_engenharia.notificacao.ThreadNotificacao;
 import graduacao.ufba.lab_engenharia.produto.Produto;
 import graduacao.ufba.lab_engenharia.transacao.GerenteTransacao;
 import graduacao.ufba.lab_engenharia.usuario.Usuario;
@@ -12,16 +13,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-public class Estoque implements Runnable{
+//OBS EStoque não deveria ser a thread, é necessário ter uma classe exclusiva para tratar da execução da thread
+public class Estoque{
 
 	private static Estoque instance;
-	private long cd_user = 1;
+	private long cd_user = 1; //OBS Esse valor sempre é recarregado ao recompilar o código, caso queira manter
+	//persistencia dos dados, esse valor tem que ser carregado tambem;
+	
 	private HashMap<String, Usuario> list_usuarios;
 	private HashMap<String,Produto> list_produtos;
-	private ArrayList<Notificacao> list_notificacao;
+	//private ArrayList<Notificacao> list_notificacao;//TODO Quem cuidará do gerenciamento será a classe "ThreadNotificacao"
 	private Arquivo log;
 	private BuscaProdutoBehavior algoritmo_busca_produto;
 	private GerenteTransacao gerente_transacao;
+	
+	private ThreadNotificacao thread_notificacao; //Classe em que a thread está sendo executada
 	
 	private Estoque (){
 		list_produtos = new HashMap<>();
@@ -111,13 +117,11 @@ public class Estoque implements Runnable{
 		return true;
 	}
 	//implementado por Ive
-	//TODO: Incluir no Diagrama de Classes
 	public HashMap<String,Produto> getListProdutos(){
 		return list_produtos;
 	}
 	
 	//implementado por Ive
-	//TODO: Incluir no Diagrama de Classes
 	public String returnKeyObject(Produto product){
 		for(Entry<String, Produto> entry : list_produtos.entrySet()) {
 		    Produto produto = entry.getValue();
@@ -133,7 +137,7 @@ public class Estoque implements Runnable{
 		return	 list_produtos.replace(returnKeyObject(old_product), old_product, new_product);
 	}
 	
-	
+	//TODO Analisar para ver se realmente deve existe isso, pode ser alterado para remover o objeto do Estoque
 	public boolean removeProduto(Produto product, long quantidade){
 		if(!product.removeQuantidade(quantidade))
 			return false;
@@ -142,51 +146,67 @@ public class Estoque implements Runnable{
 	}
 	
 	//implementado por Ive
+	//Alterado por Welbert (pegar o clone do objeto, senão pegaria a refência do mesmo objeto)
 	public boolean alterarQuantidadeProduto(Produto product,int quantidade){
-		Produto produto_novo = product;
+		Produto produto_novo = product.getClone();
 		produto_novo.setQuantidade(quantidade);
 		editProduct(product,produto_novo);
 		return true;
 	}
 	
-	private synchronized ArrayList<Notificacao> getList_notificacao(){
-		return list_notificacao;
+	public ThreadNotificacao getThreadNotificacao(){
+		if(this.thread_notificacao == null)
+			this.thread_notificacao = new ThreadNotificacao();
+		
+		return thread_notificacao;
 	}
 	
+	//OBS Não é necessário aqui
+	//private synchronized ArrayList<Notificacao> getList_notificacao(){
+	//	return list_notificacao;
+	//}
+	
+	//TODO Enviará o comando para a classe responsável pela thread //Exemplo em removeNotificacao() logo abaixo
 	public  void addNotificacao(Notificacao notificacao){
-		Date tempo = notificacao.getTempo();
+		/*Date tempo = notificacao.getTempo();
 		for(Notificacao notifi: getList_notificacao() ){
 			if(tempo.before(notifi.getTempo())){
 				getList_notificacao().add(getList_notificacao().indexOf(notifi), notificacao);
 				break;
 			}
-		}
+		}*/
 	}
 	
+	//TODO Enviará o comando para a classe responsável pela thread
 	//implementado por Ive
 	public boolean editNotificacao(Notificacao old_notificacao,Notificacao new_notificacao){
-		int index = getList_notificacao().indexOf(old_notificacao);
+		/*int index = getList_notificacao().indexOf(old_notificacao);
 		getList_notificacao().add(index, new_notificacao);
 		if(index > -1){
 			return true;
 		}
 		else{
 			return false;
-		}
+		}*/
+		return true;
 	}
-
+	//TODO Enviará o comando para a classe responsável pela thread
 	public boolean removeNotificacao(Notificacao notificacao){
-		return getList_notificacao().remove(notificacao);
+		return getThreadNotificacao().removeNotificacao(notificacao);
+		//getList_notificacao().remove(notificacao);
 	}
 	
 	//implementado por Ive
+	//TODO Enviará o comando para a classe responsável pela thread
 	//TODO: Incluir no Diagrama de Classes
 	public int getIndexNotificacao(Notificacao notificacao){
-		return getList_notificacao().indexOf(notificacao);
+		//return getList_notificacao().indexOf(notificacao);
+		return 1;
 	}
 	
+	//TODO Migrar para a nova classe que está reponsavel pela thread de notificação para a thread ficar encargo de processar a nextnotificacao
 	//Obter a notificação mais atual, atualizar seu tempo e reordena-la na fila
-	public Notificacao getNextNotificacao(){
+	/*public Notificacao getNextNotificacao(){
 		Notificacao notifi = getList_notificacao().get(0);
 		notifi.atualizaTempo();//Atualiza tempo
 		//Realoca a primeira da fila
@@ -195,7 +215,7 @@ public class Estoque implements Runnable{
 		//Notificar:
 		notifi.notificar();
 		return notifi;
-	}
+	}*/
 	
 	//Ive: TODO: Mudar no Diagrama de Classe
 	public ArrayList<Produto> buscaProduto(Object[] Args){
@@ -232,10 +252,10 @@ public class Estoque implements Runnable{
 		return gerente_transacao.emitirHistorio(user);
 	}
 
-	@Override
-	// TODO Atualizar Diagrama de classes(?)
-	public void run() {
-		long wait;
+
+	//TODO Migrar para a nova classe que está reponsavel pela thread de notificação
+	//public void run() {
+		/*long wait;
 		while(Config.parametro_notificacao_ativa){
 			getNextNotificacao();
 			try {
@@ -245,6 +265,6 @@ public class Estoque implements Runnable{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-	}
+		}*/
+	//}
 }

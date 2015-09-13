@@ -6,7 +6,7 @@ public class CommandLogoff extends Command{
 
 	@Override
 	public Object[] execute(Object[] dados) {
-		// TODO Auto-generated method stub
+		// TODO Implementar a lógica de logoff para a aplicação que irá usar o framework
 		return null;
 	}
 

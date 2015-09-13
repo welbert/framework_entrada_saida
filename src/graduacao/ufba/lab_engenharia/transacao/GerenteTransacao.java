@@ -26,12 +26,12 @@ public class GerenteTransacao {
 
 	public boolean iniciarTransacao(Usuario user){
 
-		//TODO Antes de adicionar a transacao, verificar se outro ja existia, se sim return false, senao adicione e return true. OBS: chave para hashmap = user.getIdentificador()
+		//Objetivo do metodo: Antes de adicionar a transacao, verificar se outro ja existia, se sim return false, senao adicione e return true. OBS: chave para hashmap = user.getIdentificador()
 
 		Set<String> chaves = list_transacao.keySet();  
-		for (String chave : chaves)  
+		for (String chave : chaves)  //Obs: Não há necessidade do for, usar if(list_transacao.containsKey(user.getIdentificador()))
 		{ 
-			if(chave == user.getIdentificador())
+			if(chave == user.getIdentificador()) //TODO bug: só faz o if na primeira vez,ou seja, não está validando corretamente
 				return false;
 			else{
 				addHistorico(user);
@@ -53,16 +53,16 @@ public class GerenteTransacao {
 	}
 
 	public boolean cancelarTransacao(Usuario user){
-		//TODO Antes de remover a transação, colocar de volta os produtos 
+		//Objetivo do metodo: Antes de remover a transação, colocar de volta os produtos 
 		int flag = 0;
 		
-		for (String chave : list_transacao.keySet()){ 
+		for (String chave : list_transacao.keySet()){ //Obs: Não há necessidade do for, usar if(list_transacao.containsKey(user.getIdentificador()))
 			if(chave == user.getIdentificador()){
 				Transacao transaction = list_transacao.get(chave);
 				for (Produto produto : transaction.getList_produto()){
-					Estoque.getInstance().addProduto(produto);
-					flag = 1;
+					Estoque.getInstance().addProduto(produto);					
 				}
+				flag = 1;
 			}
 		}
 		if (flag == 1){
@@ -79,7 +79,7 @@ public class GerenteTransacao {
 			return false;
 
 
-		return transaction.addProduto(product); //TODO testar se isso salva como referencia ou se apenas na variavel local transaction
+		return transaction.addProduto(product.getClone()); //TODO testar se isso salva como referencia ou se apenas na variavel local transaction
 	}
 
 	public boolean removeProdutoTransacao(Usuario user,Produto product){

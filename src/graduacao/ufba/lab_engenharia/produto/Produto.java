@@ -1,7 +1,9 @@
 package graduacao.ufba.lab_engenharia.produto;
 
+import graduacao.ufba.lab_engenharia.estoque.Estoque;
 
-public abstract class Produto {
+
+public abstract class Produto implements Cloneable{
 	
 	private long quantidade;
 	private long id;//TODO:Ive: O tipo long não é compativel com uma busca padrão que recebe Object[]. Long é um tipo primitivo que n deriva de Object
@@ -71,6 +73,14 @@ public abstract class Produto {
 		this.nome = nome;
 	}
 	
-	
+	//Implementado por Welbert
+	public Produto getClone(){
+		try{
+			return (Produto) super.clone();
+		}catch(Exception e){
+			Estoque.getInstance().salvarLogAviso("Falha ao clonar o objeto Produto");
+			return this;
+		}
+	}
 	
 }
